@@ -1,14 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
 import AddCart from './AddCart';
-import LabelIcon from '@material-ui/icons/Label';
-import Icon from '@material-ui/core/Icon';
 import './Product.css';
 
 
@@ -24,8 +21,7 @@ const Product = ({ product }) => {
   });
 
   const classes = useStyles();
-
-  return (
+return (
     <Card className={classes.root} variant="outlined">
     <CardActionArea>
       <CardMedia
@@ -44,11 +40,10 @@ const Product = ({ product }) => {
       <AddCart product={product} />
     </CardActions>
   </Card>
-  );
+  );}
 
 
 
-}
 
 
 

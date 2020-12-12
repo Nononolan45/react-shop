@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState, useCallback, useContext, useReducer } from 'react';
+import React, { useEffect, useState, useCallback, useContext, useReducer, useMemo } from 'react';
 import Filters from './Filters';
 import ListProducts from './ListProducts';
 import Header from './Header';
@@ -63,7 +63,6 @@ const App = () => {
   const [search, setSearch] = useState('');
   const [price, setPrice] = useState([0, 1000]);
   const [categories, setCategories] = useState([]);
-  const [productsAvailable, setProductsAvailable] = useState([]);
   const [loadingCategories, setLoadingCat] = useState(true);
   const contextReducer = useReducer(reducer, initialStoreValue)
   const classes = useStyles();
@@ -82,7 +81,6 @@ const App = () => {
     if (req.status === 200) {
       console.log(response)
       setProducts(response);
-      setProductsAvailable(response);
       loadCategories(response)
     }
     else {
@@ -91,6 +89,7 @@ const App = () => {
   }, [])
 
   const loadCategories = (products) => {
+    console.log('je charge les categories')
     const categories = products.map(product => product.category)
       .reduce((reducer, value) => {
         let cat = reducer.find(c => c.name === value);
@@ -118,12 +117,15 @@ const App = () => {
     return (!str || 0 === str.length);
   }
 
-  const filterProducts = () => {
+  const filterProducts = useMemo(
+  () => {
+    console.log('Filter function is running ...');
+
     let listProducts = [...products];
     const categoriesChecked = categories.filter(elmt => elmt.checked).map(elmt => elmt.name);
-    listProducts = listProducts.filter((product) => {
+    return listProducts = listProducts.filter((product) => {
       if (
-        (product.title.includes(search) || isBlank(search) || isEmpty(search)) &&
+        (product.title.toLowerCase().includes(search.toLowerCase()) || isBlank(search) || isEmpty(search)) &&
         (categoriesChecked.includes(product.category) || categoriesChecked.length === 0) &&
         (product.price > price[0] && product.price < price[1])) {
         return product
@@ -131,17 +133,11 @@ const App = () => {
         return false
       }
     });
-    setProductsAvailable(listProducts);
-  }
+  },[categories, price, search, products]);
 
   useEffect(() => {
-    if (products.length === 0) {
-      loadProducts();
-    }
-    else {
-      filterProducts();
-    }
-  }, [loadProducts, search, categories, price]);
+      loadProducts();    
+  }, [loadProducts]);
 
 
 
@@ -165,7 +161,7 @@ const App = () => {
               setSearch={setSearch} setPrice={setPrice} setCategories={setCategories}
               loadingCategories={loadingCategories} />      </Grid>
           <Grid item xs={8}>
-            <ListProducts products={productsAvailable} />
+            <ListProducts products={filterProducts} />
           </Grid>
 
         </Grid>

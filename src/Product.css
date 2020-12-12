@@ -1,13 +1,13 @@
 #content {
-    overflow: hidden;
-    max-height: 70px;
-    min-height: 70px;
+    overflow: scroll;
+    max-height: 100px;
+    min-height: 100px;
 }
 
 #title {
     overflow: hidden;
-    max-height: 30px;
-    min-height: 30px;
+    max-height: 70px;
+    min-height: 70px;
 }
 
 
