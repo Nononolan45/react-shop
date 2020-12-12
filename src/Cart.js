@@ -1,15 +1,8 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import IconButton from '@material-ui/core/IconButton';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
 import './Cart.css';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,27 +11,8 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
-import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-
-
-
-
-
-const rand = () => {
-    return Math.round(Math.random() * 20) - 10;
-}
-
-const getModalStyle = () => {
-    const top = 50 + rand();
-    const left = 50 + rand();
-
-    return {
-        top: `${top}%`,
-        left: `${left}%`,
-        transform: `translate(-${top}%, -${left}%)`,
-    };
-}
+import DetailsCart from './DetailsCart'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -113,13 +87,9 @@ const DialogTitle = withStyles(styles)((props) => {
 
 
 
-const Cart = ({ carts, dispatch, handleClose, open }, ref) => {
-    const classes = useStyles();
-    const [modalStyle] = React.useState(getModalStyle);
+const Cart = ({ carts, dispatch, handleClose, open }) => {
 
-    const generateListCout = (count) => {
-        return Array.from(Array(Math.ceil(count / 10) * 10).keys());
-    }
+    const classes = useStyles();
 
     const handleChangeSelect = (e) => {
         dispatch({ type: 'UPDATE_COUNT_CART', value: { count: Number(e.target.value), id: Number(e.target.id) } });
@@ -141,8 +111,6 @@ const Cart = ({ carts, dispatch, handleClose, open }, ref) => {
     }
 
 
-
-
     return <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
             CART
@@ -153,53 +121,7 @@ const Cart = ({ carts, dispatch, handleClose, open }, ref) => {
             {(carts.length > 0) && (
                 <List className={classes.root}>
                     {carts.map((cart) => (
-                        <>
-                            <ListItem alignItems="flex-start" key={cart.id}>
-
-                                <ListItemAvatar>
-                                    <Avatar alt="..." src={cart.image} />
-                                </ListItemAvatar>
-
-                                <ListItemText
-                                    primary={cart.title}
-                                    secondary={
-                                        <>
-                                            <Typography
-                                                component="div"
-                                                variant="body2"
-                                                className={classes.inline}
-                                                color="textPrimary"
-                                            > {`Indiv ${cart.price}$`}
-                                            </Typography>
-                                            <div id="total">Total {cart.price * cart.count}$</div>
-                                        </>
-                                    }
-                                />
-
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="count"></InputLabel>
-                                    <Select
-                                        native
-                                        value={cart.count}
-                                        onChange={handleChangeSelect}
-                                        inputProps={{
-                                            name: 'count',
-                                            id: cart.id,
-                                        }}
-                                    >
-                                        {generateListCout(cart.count).map(item => (
-                                            (item !== 0) && <option key={item} value={item}>{item}</option>
-                                        ))}
-                                    </Select>
-
-                                    <Button color="secondary" onClick={handleDelete} variant="contained">
-                                        <span id={cart.id}>DELETE</span>
-                                    </Button>
-
-                                </FormControl>
-                            </ListItem>
-                            <Divider />
-                        </>
+                        <DetailsCart key={cart.id} cart={cart} handleChangeSelect={handleChangeSelect} handleDelete={handleDelete} />
                     ))}
                 </List>
             )}
@@ -223,7 +145,7 @@ const Cart = ({ carts, dispatch, handleClose, open }, ref) => {
                 color="primary"
                 variant="contained"
             >{
-             `CHECKOUT ${totalPriceAllCart()}$`}
+                    `CHECKOUT ${totalPriceAllCart()}$`}
             </Button>
 
         </DialogActions>

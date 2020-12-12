@@ -63,8 +63,11 @@ export default function Header () {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
         >
-            <Cart carts={value_context.carts} dispatch={dispatch} handleClose={handleClose} open={open}
+            <div>
+                <Cart carts={value_context.carts} dispatch={dispatch} handleClose={handleClose} open={open}
+            
             />
+                </div>
         </Modal>
     </div>
     }, [classes, dispatch, open, value_context]);
