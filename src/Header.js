@@ -11,9 +11,8 @@ import Badge from '@material-ui/core/Badge';
 import './Header.css'
 import { Context } from './App'
 import Modal from '@material-ui/core/Modal';
-import DetailsCart from './DetailsCart';
+import Cart from './Cart';
 
-  
 
 const useStyles = makeStyles((theme) => ({
     menuButton: {
@@ -24,24 +23,22 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+export default function Header () {
 
-
-
-
-const Header = () => {
     const classes = useStyles();
     const [value_context, dispatch] = useContext(Context);
     const [open, setOpen] = React.useState(false);
 
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
+    return useMemo(() => {
+        
+        const handleOpen = () => {
+            setOpen(true);
+        };
+    
+        const handleClose = () => {
+            setOpen(false);
+        };
+    
     return <div className={classes.root}>
         <AppBar position="static">
             <Toolbar>
@@ -66,14 +63,14 @@ const Header = () => {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
         >
-            <DetailsCart carts={value_context.carts} dispatch={dispatch} handleClose={handleClose}             open={open}
- />
+            <Cart carts={value_context.carts} dispatch={dispatch} handleClose={handleClose} open={open}
+            />
         </Modal>
     </div>
+    }, [classes, dispatch, open, value_context]);
 
 }
 
-export default Header;
 
 
 

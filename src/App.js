@@ -1,27 +1,14 @@
 import './App.css';
-import React, { useEffect, useState, useCallback, useContext, useReducer, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useReducer } from 'react';
 import Filters from './Filters';
 import ListProducts from './ListProducts';
 import Header from './Header';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 
 const initialStoreValue = {
   carts: []
 };
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-}));
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -29,6 +16,7 @@ const reducer = (state, action) => {
       console.log('on passe dans le dispatch ', action.value.id);
       console.log([...state.carts.filter(cart => cart.id !== action.value.id)]);
       return { carts: [...state.carts.filter(cart => cart.id !== action.value.id)] };
+
     case 'ADD_CART':
       let cart = state.carts.find(cart => cart.id === action.value.id);
       if (cart) {
@@ -38,25 +26,23 @@ const reducer = (state, action) => {
         state.carts.push(action.value);
       }
       return { carts: [...state.carts] };
+
     case 'UPDATE_COUNT_CART':
       let found = state.carts.find(cart => cart.id === action.value.id);
       found.count = action.value.count;
       return { carts: [...state.carts] };
-    case 'CLEAR_CART': {
-      return { carts: [] }
-    }
 
-    // break;
+    case 'CLEAR_CART':
+      return { carts: [] }
+
     default:
       throw new Error();
   }
 }
+
 export const Context = React.createContext(initialStoreValue, null);
 
-
-const App = () => {
-
-
+export default function App() {
 
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
@@ -65,15 +51,11 @@ const App = () => {
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCat] = useState(true);
   const contextReducer = useReducer(reducer, initialStoreValue)
-  const classes = useStyles();
-
-
-
 
 
   const loadProducts = useCallback(async () => {
-    console.log('je passe ici chager les produits')
-    const URL = process.env.REACT_APP_URL_PRODUCTS;
+    const URL = process.env.REACT_APP_URL_PRODUCTS ||
+      'https://fakestoreapi.com/products';
 
     let req = await fetch(URL);
     const response = await req.json();
@@ -86,27 +68,23 @@ const App = () => {
     else {
       setError(true);
     }
-  }, [])
+  }, []);
 
   const loadCategories = (products) => {
-    console.log('je charge les categories')
-    const categories = products.map(product => product.category)
+    const categories = products
+      .map(product => product.category)
       .reduce((reducer, value) => {
         let cat = reducer.find(c => c.name === value);
         if (cat) {
           cat.count++;
         }
         else {
-          reducer.push({ name: value, count: 0, checked: false });
-
+          reducer.push({ name: value, count: 1, checked: false });
         }
-
         return reducer;
       }, []);
     setCategories(categories)
     setLoadingCat(false)
-
-
   }
 
   const isBlank = (str) => {
@@ -118,56 +96,45 @@ const App = () => {
   }
 
   const filterProducts = useMemo(
-  () => {
+    () => {
 
-    let listProducts = [...products];
-    const categoriesChecked = categories.filter(elmt => elmt.checked).map(elmt => elmt.name);
-    return listProducts = listProducts.filter((product) => {
-      if (
-        (product.title.toLowerCase().includes(search.toLowerCase()) || isBlank(search) || isEmpty(search)) &&
-        (categoriesChecked.includes(product.category) || categoriesChecked.length === 0) &&
-        (product.price > price[0] && product.price < price[1])) {
-        return product
-      } else {
-        return false
-      }
-    });
-  },[categories, price, search, products]);
+      let listProducts = [...products];
+      const categoriesChecked = categories.filter(elmt => elmt.checked).map(elmt => elmt.name);
+
+      return listProducts = listProducts.filter((product) => {
+        if (
+          (product.title.toLowerCase().includes(search.toLowerCase()) || isBlank(search) || isEmpty(search)) &&
+          (categoriesChecked.includes(product.category) || categoriesChecked.length === 0) &&
+          (product.price > price[0] && product.price < price[1])) {
+          return product
+        }
+        else {
+          return false
+        }
+      });
+    }, [categories, price, search, products]);
 
   useEffect(() => {
-      loadProducts();    
+    loadProducts();
   }, [loadProducts]);
-
-
-
-
-
-
-
 
   return (
 
     <Context.Provider value={contextReducer}>
-
-
-
       < Header />
       <Container className="container-shop" maxWidth="lg">
         <Grid container spacing={4}>
-
           <Grid item xs={4}>
             <Filters categories={categories} search={search} price={price}
               setSearch={setSearch} setPrice={setPrice} setCategories={setCategories}
-              loadingCategories={loadingCategories} />      </Grid>
+              loadingCategories={loadingCategories} />
+          </Grid>
           <Grid item xs={8}>
             <ListProducts products={filterProducts} />
           </Grid>
-
         </Grid>
       </Container>
     </Context.Provider>
-
   );
 }
 
-export default App;

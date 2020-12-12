@@ -11,7 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
-import './DetailsCart.css';
+import './Cart.css';
 import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -113,7 +113,7 @@ const DialogTitle = withStyles(styles)((props) => {
 
 
 
-const DetailsCart = ({ carts, dispatch, handleClose, open }, ref) => {
+const Cart = ({ carts, dispatch, handleClose, open }, ref) => {
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
 
@@ -230,4 +230,4 @@ const DetailsCart = ({ carts, dispatch, handleClose, open }, ref) => {
     </Dialog>
 }
 
-export default React.forwardRef(DetailsCart);
+export default React.forwardRef(Cart);
