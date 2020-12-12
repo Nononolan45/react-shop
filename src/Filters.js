@@ -9,19 +9,18 @@ import Divider from '@material-ui/core/Divider';
 
 
 
-export default function Filters({ categories, search, price, 
+export default function Filters({ categories, search, price,
     setSearch, setPrice, setCategories }) {
 
     const memoSearch = useMemo(() => {
 
-        const handleChangeSearch = (e) => { 
-            console.log('render search ');
+        const handleChangeSearch = (e) => {
             setSearch(e.target.value);
         }
-            return  <div  className="filter">
+        return <div className="filter">
             <ListItemText primary="FILTERS" />
             <ListItem>
-                <TextField  id="standard-basic" label="Search" name="search" value={search} onChange={handleChangeSearch} />
+                <TextField id="standard-basic" label="Search" name="search" value={search} onChange={handleChangeSearch} />
             </ListItem>
             <Divider />
         </div>
@@ -33,30 +32,30 @@ export default function Filters({ categories, search, price,
             setPrice(newValue);
         }
 
-        return <div  className="filter">
-        <ListItemText primary="PRICE" />
-        <ListItemText primary={`Between ${price[0]}$ and ${price[1]}$`} />
-        <ListItem>
-            <Slider value={price} onChange={handleChangeSlider} min={0} step={10} max={1000}
-                valueLabelDisplay="auto" aria-labelledby="range-slider"
-            />                   
-        </ListItem>
-        <Divider />
-    </div>
-    },[setPrice, price]);
+        return <div className="filter">
+            <ListItemText primary="PRICE" />
+            <ListItemText primary={`Between ${price[0]}$ and ${price[1]}$`} />
+            <ListItem>
+                <Slider value={price} onChange={handleChangeSlider} min={0} step={10} max={1000}
+                    valueLabelDisplay="auto" aria-labelledby="range-slider"
+                />
+            </ListItem>
+            <Divider />
+        </div>
+    }, [setPrice, price]);
 
     const memoCategories = useMemo(() => {
-        return  <div className="filter">
-        <Categories categories={categories} setCategories={setCategories} />
+        return <div className="filter">
+            <Categories categories={categories} setCategories={setCategories} />
         </div>
     }, [categories, setCategories]);
 
     return <>
-            <form >
-                {memoSearch}
-                {memoPrice}
-                {memoCategories}
-            </form>
+        <form >
+            {memoSearch}
+            {memoPrice}
+            {memoCategories}
+        </form>
     </>
 }
 

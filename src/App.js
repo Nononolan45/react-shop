@@ -13,8 +13,6 @@ const initialStoreValue = {
 const reducer = (state, action) => {
   switch (action.type) {
     case 'DELETE_CART':
-      console.log('on passe dans le dispatch ', action.value.id);
-      console.log([...state.carts.filter(cart => cart.id !== action.value.id)]);
       return { carts: [...state.carts.filter(cart => cart.id !== action.value.id)] };
 
     case 'ADD_CART':
@@ -61,7 +59,6 @@ export default function App() {
     const response = await req.json();
 
     if (req.status === 200) {
-      console.log(response)
       setProducts(response);
       loadCategories(response)
     }

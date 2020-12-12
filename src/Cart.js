@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,31 +15,6 @@ import Button from '@material-ui/core/Button';
 import DetailsCart from './DetailsCart'
 
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
-        position: 'absolute',
-        width: 500,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-    },
-
-    inline: {
-        display: 'inline',
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 40,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
-    button: {
-        margin: theme.spacing(1)
-    }
-
-}));
 
 const styles = (theme) => ({
     root: {
@@ -81,75 +56,102 @@ const DialogTitle = withStyles(styles)((props) => {
     );
 });
 
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        position: 'absolute',
+        width: 500,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+    },
+
+    inline: {
+        display: 'inline',
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 40,
+    },
+    selectEmpty: {
+        marginTop: theme.spacing(2),
+    },
+    button: {
+        margin: theme.spacing(1)
+    }
+
+}));
 
 
 
 
 
 
-const Cart = ({ carts, dispatch, handleClose, open }) => {
+
+
+export default function Cart({ carts, dispatch, handleClose, open }) {
 
     const classes = useStyles();
 
-    const handleChangeSelect = (e) => {
-        dispatch({ type: 'UPDATE_COUNT_CART', value: { count: Number(e.target.value), id: Number(e.target.id) } });
+    return useMemo(() => {
+        const handleChangeSelect = (e) => {
+            dispatch({ type: 'UPDATE_COUNT_CART', value: { count: Number(e.target.value), id: Number(e.target.id) } });
 
-    }
+        }
 
-    const clearCart = () => {
-        dispatch({ type: 'CLEAR_CART' });
-    }
+        const clearCart = () => {
+            dispatch({ type: 'CLEAR_CART' });
+        }
 
-    const handleDelete = (e) => {
-        dispatch({ type: 'DELETE_CART', value: { id: Number(e.target.id) } });
-    }
+        const handleDelete = (e) => {
+            dispatch({ type: 'DELETE_CART', value: { id: Number(e.target.id) } });
+        }
 
-    const totalPriceAllCart = () => {
-        return carts.reduce((sum, cart) => {
-            return sum + (cart.price * cart.count)
-        }, 0)
-    }
+        const totalPriceAllCart = () => {
+            return carts.reduce((sum, cart) => {
+                return sum + (cart.price * cart.count)
+            }, 0)
+        }
 
-
-    return <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-            CART
+        return <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                CART
         </DialogTitle>
-        <DialogContent dividers>
-            {(carts.length === 0) && (<p>Your cart is empty.</p>)}
+            <DialogContent dividers>
+                {(carts.length === 0) && (<p>Your cart is empty.</p>)}
 
-            {(carts.length > 0) && (
-                <List className={classes.root}>
-                    {carts.map((cart) => (
-                        <DetailsCart key={cart.id} cart={cart} handleChangeSelect={handleChangeSelect} handleDelete={handleDelete} />
-                    ))}
-                </List>
-            )}
-        </DialogContent>
-        <DialogActions>
+                {(carts.length > 0) && (
+                    <List className={classes.root}>
+                        {carts.map((cart) => (
+                            <DetailsCart key={cart.id} cart={cart} handleChangeSelect={handleChangeSelect} handleDelete={handleDelete} />
+                        ))}
+                    </List>
+                )}
+            </DialogContent>
+            <DialogActions>
 
-            <Button
-                startIcon={<DeleteIcon />}
-                onClick={clearCart}
-                color="primary"
-                variant="contained"
-                className={classes.button}
-            >
-                CLEAR CART
+                <Button
+                    startIcon={<DeleteIcon />}
+                    onClick={clearCart}
+                    color="primary"
+                    variant="contained"
+                    className={classes.button}
+                >
+                    CLEAR CART
             </Button>
 
-            <Button
-                className={classes.button}
-                startIcon={<CreditCardIcon />}
-                onClick={handleClose}
-                color="primary"
-                variant="contained"
-            >{
-                    `CHECKOUT ${totalPriceAllCart()}$`}
-            </Button>
+                <Button
+                    className={classes.button}
+                    startIcon={<CreditCardIcon />}
+                    onClick={handleClose}
+                    color="primary"
+                    variant="contained"
+                >{
+                        `CHECKOUT ${totalPriceAllCart()}$`}
+                </Button>
 
-        </DialogActions>
-    </Dialog>
+            </DialogActions>
+        </Dialog>
+    }, [carts, classes, dispatch, open, handleClose]);
 }
 
-export default React.forwardRef(Cart);

@@ -23,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const wrapper = React.createRef();
+
 export default function Header () {
 
     const classes = useStyles();
@@ -63,7 +65,8 @@ export default function Header () {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
         >
-            <div>
+            <div      
+>
                 <Cart carts={value_context.carts} dispatch={dispatch} handleClose={handleClose} open={open}
             
             />
