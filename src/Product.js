@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, use } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -11,20 +11,12 @@ import './Product.css';
 
 const Product = ({ product }) => {
 
-  const useStyles = makeStyles({
-    root: {
-      maxWidth: 345,
-    },
-    media: {
-      height: 140,
-    },
-  });
 
-  const classes = useStyles();
-return (
-    <Card className={classes.root} variant="outlined">
+  const memoRender = useMemo(() => {
+    console.log("render produit numero :" , product.id);
+    return <Card variant="outlined">
     <CardActionArea>
-      <CardMedia
+    <CardMedia
         image={product.image}
         title={product.title}
         component="img"
@@ -35,12 +27,17 @@ return (
         <p id="content">{product.description}</p>
         <h4> Category: {product.category}</h4>
       </CardContent>
+
     </CardActionArea>
     <CardActions>
       <AddCart product={product} />
     </CardActions>
   </Card>
-  );}
+  }, [product]);
+
+  return memoRender;
+
+};
 
 
 

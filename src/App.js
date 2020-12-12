@@ -119,7 +119,6 @@ const App = () => {
 
   const filterProducts = useMemo(
   () => {
-    console.log('Filter function is running ...');
 
     let listProducts = [...products];
     const categoriesChecked = categories.filter(elmt => elmt.checked).map(elmt => elmt.name);

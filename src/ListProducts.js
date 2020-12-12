@@ -21,7 +21,8 @@ const ListProducts =  ({products}) => {
 
  }
 
- return useMemo(() => render(products), [products]);
+//  return useMemo(() => render(products), [products]);
+return render(products);
 }
 
 export default ListProducts
