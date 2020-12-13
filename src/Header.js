@@ -23,8 +23,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const wrapper = React.createRef();
-
 export default function Header () {
 
     const classes = useStyles();
