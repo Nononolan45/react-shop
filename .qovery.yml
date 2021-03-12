@@ -3,6 +3,7 @@ application:
   name: "react-shop"
   project: "REACT SHOP"
   organization: "QoveryCommunity"
+  port: 3000
 routers:
 - name: "main-react-shop"
   routes:
